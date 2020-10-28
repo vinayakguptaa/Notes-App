@@ -2,6 +2,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 require("dotenv").config();
 const User = require('../models/user.model');
+const Note = require('../models/note.model');
 
 const RegisterUser = async (req, res) => {
     const { name, email, password } = req.body;
@@ -61,4 +62,18 @@ const LoginUser = async (req, res) => {
         });
 }
 
-module.exports = { RegisterUser, LoginUser };
+const getAllNotes = async (req, res) => {
+    const user = req.user;
+    Note.find({ userId: _id })
+        .then((result) => {
+            if (result.length > 0) {
+                return res.status(200).json({ result });
+            }
+        })
+        .catch((err) => {
+            console.log(err);
+            return res.status(400).json({ message: "Failed" });
+        })
+}
+
+module.exports = { RegisterUser, LoginUser, getAllNotes };
